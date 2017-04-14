@@ -1,0 +1,123 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style type="text/css">
+  html { height: 100% }
+  body { height: 100%; margin: 0; padding: 0 }
+  #map_canvas { height: 100% }
+</style>
+<title>Untitled Document</title>
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="node_modules/bootswatch/paper/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <!-- Javascript -->
+    <script src="node_modules/angular/angular.min.js" charset="utf-8"></script>
+    <script src="node_modules/angular-route/angular-route.min.js" charset="utf-8"></script>
+
+    <script src="app.js" charset="utf-8"></script>
+        <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBmmg1TXNk4bQUwC9AnByey2uShUupmZTQ&callback=initMap">
+    </script>
+    <script>
+		var markers = [];
+ var locations = [
+  ['Bangalore', 12.9716, 77.5946, 'address 1'],
+  ['Chennai', 13.0827, 80.2707, 'address 2'],
+  ['Delhi', 28.7041, 77.1025, 'address 3'],
+  ['Kolkata', 22.5726, 88.3639, 'address 4'],
+  ['Mumbai', 19.0760, 72.8777, 'address 5']
+  ];
+
+  function initialize() {
+
+    var myOptions = {
+      center: new google.maps.LatLng(21.839993, 78.9990723),
+      zoom: 4,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+
+    };
+    var map = new google.maps.Map(document.getElementById("default"),
+        myOptions);
+
+    setMarkers(map,locations)
+
+  }
+
+
+
+  function setMarkers(map,locations){
+
+      var marker, i
+
+for (i = 0; i < locations.length; i++)
+ {  
+
+ var loan = locations[i][0]
+ var lat = locations[i][1]
+ var long = locations[i][2]
+ var add =  locations[i][3]
+
+ latlngset = new google.maps.LatLng(lat, long);
+
+  var marker = new google.maps.Marker({  
+          map: map, title: loan , position: latlngset  
+        });
+        map.setCenter(marker.getPosition())
+
+
+        var content = "Loan Number: " + loan +  '</h3>' + "Address: " + add     
+
+  var infowindow = new google.maps.InfoWindow()
+
+google.maps.event.addListener(marker,'click', (function(marker,content,infowindow){ 
+        return function() {
+           infowindow.setContent(content);
+           infowindow.open(map,marker);
+        };
+    })(marker,content,infowindow)); 
+	 	  markers.push(marker); 
+ 	
+    }
+	  
+  }
+ google.maps.event.addDomListener(window, 'load', initialize);
+        
+        function myClick(id){
+            google.maps.event.trigger(markers[id], 'click');
+        }
+
+
+  </script>
+ </head>
+
+<body ng-app="myapp" onload="initialize()">
+    <nav class="navbar navbar-inverse">	
+        <div class="container">
+            <!-- To contain elements -->
+            <div class="navbar-header">
+                <!-- To make it a header -->
+                <a href="#" class="navbar-brand">News</a>
+            </div>
+            <!-- <ul class="nav navbar-nav navbar-right">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#characters">Characters</a></li>
+            </ul>-->	
+		</div>
+			</nav>
+   <div class="col-md-1"></div> 
+    <div class="col-md-8" id="default" style="widh:100%;height:500px;"></div>
+              <div class="col-md-3">
+          	<div class="container">
+          		<h3>Popular Cities</h3>
+          		<ul class="bigfont">
+					<li><a href="#" onclick="myClick(0);">Bangalore</a></li>
+					<li><a href="#" onclick="myClick(1);">Chennai</a></li>
+					<li><a href="#" onclick="myClick(2);">Delhi</a></li>
+					<li><a href="#" onclick="myClick(3);">Mumbai</a></li>
+					<li><a href="#" onclick="myClick(4);">Kolkata</a></li>
+          		</ul>
+          	</div>
+          </div>
+</body>
+</html>
